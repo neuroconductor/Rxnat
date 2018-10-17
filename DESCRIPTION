@@ -1,8 +1,8 @@
 Package: Rxnat
 Version: 0.0.0.9005
 Title: Query/retrieve Images from XNAT Public/Private Datasets
-Description: This package will allow a user to query and extract subsets of images
- from a private/public XNAT dataset.
+Description: This package will allow a user to query and extract
+        subsets of images from a private/public XNAT dataset.
 Authors@R: person("Adi", "Gherman", ,"adig@jhu.edu", c("aut", "cre"))
 Maintainer: Adi Gherman <adig@jhu.edu>
 Depends: R (>= 3.5.0)
@@ -12,3 +12,7 @@ Encoding: UTF-8
 LazyData: true
 ByteCompile: true
 RoxygenNote: 6.1.0
+Suggests: 
+    covr,
+    testthat
+biocViews: 
