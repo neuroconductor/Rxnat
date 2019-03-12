@@ -1,5 +1,4 @@
 language: r
-sudo: false
 cache: packages
 warnings_are_errors: true
 use_bioc: true
@@ -79,7 +78,7 @@ deploy:
   on:
     tags: true
   api-key:
-    secure: AeLiLK3O6zZzYNtncD98brzROMFulBcOx9c1XtiYKfBMbk7IysJ8Y9sleUnIrutK2CD/FNPfd5w9uXOJn0m/F+YbrKxDEmlfJQBDxuSqwrGTRyhrzmYe4eJNd0Z3pSHhuM2EKnJ0MQow86wjKa4jRv+xFCP7Wkzz7dalUxKdFnvMBkIAR7UNKCIAsuQOJZhwtiG03xI0N7ZhosLWrxcFNjHJc2A6ka9SaPbhQ2mZrK+Eeb81IktcPqgpBKe7FtT17V6kAziHk3wX0iAA/JEAyrOwvcpcdFSONY+gkvLzbAWMk45T78F/kvlC8J3kAyRAPe+dBA1jgZdt1NhmwihkG4hvib3DK5wuAUaUmxhvhzDe8uuRKcnQielTltpU9ZOVObqpKlaPLt+SidtVrp3cnMMutTPqDGLW9CV8gBAluerPOJ+TvLMGxKOXMPOk97gxTRzCrwdDZ8Rc2zBz1qxOnq5FWcLUNNPsrBzGe47ZieDncNqoyZLXU9uay/p6SccgkSJbBD0lXiX4XBac3EDMiAFD5L8+uk1e9MwaIQzb6kxpyUa4yivu0wL4uXjPgV3Bsk3UX1I5ot9SADCGOgbrNxBgXfg8fza82hsgpIOrUSP1ft1MzjZ2nuxIf1DppDpovuL1EAfgd6/qmnOUVpK1TPhElfNda/0NP+K2FYX6RcQ=
+    secure: TlIcb5ZxYzMx3J/yNs6EN4nBw6kis7if+RDXsCOUky6Jg3z4o2D9vz7Vep3hL3kikw1Z6zRrWGL30CyNm+GvpUoKUU3ylzJvojQy3URZO7uS+TYSaGt6ou5UDe0sz77rhxDs5WPpGFzp4XPwlmXazQD/9cf/WZQ7ykFKbDifan+YQo/H4BYq7t32mlzfzwS3G/BwsEgbhjd99AYRE5jnD9/ixAhnDmsrboORwBzsVjigKKmjh3i9FfYelFk2xsj70WZ2G3eHvK0Hwa20GI54fEzA4oTy9s8NSGA/cNURXcF3SgFBsDFf+SgF4/SXG4pUn6nnsjyjnlgy3DbN8gT0OH72Zc2L0cA0sDYGmANXMlZg3SNN9br00bakG1NLkMsbZnSspMQs7nd84OvHJ2mX+9gBHEZ9xeXeVHwdkoUGfhqpvBMqgbp49ssipHkyu5JVfyFakTgWDrcZaZYjsEJcYJbop++NWSFETcNrd/xwiEdEW975wfr7DBj97PuyAIoRZjhc0BxFv7GsBwn9Xlq1Kz3u/+NOKHLQWhgBQvSgf98bbwWMauZF05vfzHHr60Th6ZQYc1iEI1gei3cLErXv1MoIJiRp205sIzbQfQuKdJ1CACesooOzotx0yv+R/KKV+1Ef5rPryWJen8tPxvK5xXxvfae0io1wnNYKk36Jo0o=
 after_deploy:
 - if [[ "${TRAVIS_OS_NAME}" == "linux" && ${TRAVIS_R_VERSION_STRING} = "release" ]];
   then echo 'covr::coveralls(type = "all", quiet = FALSE)' > neuroc_covr.R ; travis_wait
