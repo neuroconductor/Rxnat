@@ -1,8 +1,8 @@
-^\./appveyor\.yml\.bak$
-^\./\.travis\.yml\.bak$
-^DESCRIPTION\.bak$
 ^CRAN-RELEASE$
 ^Rxnat\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^appveyor\.yml$
+^DESCRIPTION\.bak$
+^\./\.travis\.yml\.bak$
+^\./appveyor\.yml\.bak$
