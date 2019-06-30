@@ -58,29 +58,14 @@ before_install:
 - install_python_requirements ;
 - R CMD javareconf ;
 after_success:
-- dump_logs
-after_failure:
-- dump_logs
-before_deploy:
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then PKG_TARBALL=$(ls -1t *.tgz | head -n 1);
-  PKG_TARBALL_WITH_R=`echo $PKG_TARBALL | sed 's/.tgz/_'"R${rver}"'.tgz/'` ; mv ${PKG_TARBALL}
-  ${PKG_TARBALL_WITH_R} ; echo "Built tarball is ${PKG_TARBALL_WITH_R}" ; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then PKG_TARBALL=$(ls -1t *.tar.gz | head -n
-  1); PKG_TARBALL_WITH_R=`echo $PKG_TARBALL | sed 's/.tar.gz/_'"R${rver}"'.tar.gz/'`
-  ; mv ${PKG_TARBALL} ${PKG_TARBALL_WITH_R} ; echo "Built tarball is ${PKG_TARBALL_WITH_R}"
-  ; fi
-- if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then rm -f *.tar.gz; fi
+    - Rscript -e 'covr::coveralls()'
+    - Rscript -e 'install.packages("remotes")' -e 'remotes::install_github("hadley/pkgdown")' -e 'pkgdown::build_site()'
+    
 deploy:
-  provider: releases
-  skip_cleanup: true
-  file_glob: true
-  overwrite: true
-  file: "${PACKAGE_NAME}*.t*gz"
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  local-dir: docs
   on:
-    tags: true
-  api-key:
-    secure: eg8oHBTg5qUat8+s+KkbDqHvuVvQUKbw8lW7vr+6rN0M5hnJxRxveppMe1o3N6mR+xmxOTte2++atYXvcwuq0eAZMjzPwKw1g9GitjAZ/DE2J9ESLj3x4MotnXzr/OdfW0aCP53l7wX7dnUwrjLBI3mQsFESBPvhbv9eChoxINWqTZlBtrFUwnuggWNHsYsxj++aPC6WpgQOmx6YWutw+5EAOxp0lwm22DzlFq6buSL+vTK2rcHO+NPUc7M7x6Imd5hEilhY6G2DFmRq+8REazg9GvhVbgeXct59bMw3CFkJ9pF+XUZ7sVIjG1+bfR4eGOCbemZ2ycdehWKEPVTSMABDYzNugtq5t//XPRf4OvkMH+ff7wifqrS9SjTEMLyb2gKiR0k9iYjrMjV+bEx1QEImPmp7t1u+LWSgNSiaTgTQOh0ov9PrLp6gsibNjs2oRbTlGN0AvStLIW0ifQczwbRDvAuHlT7K2u7Na6VAMArXfIg7US+A4aW0AFnU7Rny9a3Uy4g/ATGcRnH2ELrsx3FRxHf5CzbedlM+NMYckp+n4TE6k/Hulkn+pnfRfAABPvxO73iot7iVbIMelkiQeOLnC8VxLDGwMLpWr43yEWdZ631VsI1W4NFwtOFNMu1daO/3nowhSsfohPXZIIrn+o5oTgRL4f/w4MCl2Ytj3VU=
-after_deploy:
-- if [[ "${TRAVIS_OS_NAME}" == "linux" && ${TRAVIS_R_VERSION_STRING} = "release" ]];
-  then echo 'covr::coveralls(type = "all", quiet = FALSE)' > neuroc_covr.R ; travis_wait
-  100 Rscript neuroc_covr.R ; rm neuroc_covr.R ; fi
+    branch: master
