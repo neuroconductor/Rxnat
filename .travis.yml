@@ -8,6 +8,8 @@ dist: trusty
 addons:
   apt:
     packages:
+    - libcurl4-openssl-dev
+    - libxml2-dev
     - libfftw3-dev
     - libgsl0-dev
     - libgsl0ldbl
@@ -44,6 +46,10 @@ before_install:
 - jags_install ;
 - v8_install ;
 - dcmtk_install ;
+- export cmake_version="3.11"
+- cmake --version
+- x=`cmake_setup`; echo "${x}"; eval ${x};
+- cmake --version
 - remove_neuroc_packages
 - cat DESCRIPTION
 - install_remotes_no_dep
@@ -51,21 +57,39 @@ before_install:
 - export PACKAGE_NAME=`package_name`
 - echo "Package Name is $PACKAGE_NAME"
 - if [[ "${PACKAGE_NAME}" == "waveslim" ]]; then fftw_install ; fi
-- if [[ "${PACKAGE_NAME}" == "dti" ]]; then gsl_install ; fi
+- if [[ "${PACKAGE_NAME}" == "dti" || "${PACKAGE_NAME}" == "qMRI" ]]; then gsl_install
+  ; fi
 - if [[ "${PACKAGE_NAME}" == "ROpenCVLite" || "${PACKAGE_NAME}" == "Rvision" ]]; then
   shopt -s expand_aliases ; x=`Rscript -e "cat(Sys.which('R'))"` ; echo "reset R"
   ; alias R="travis_wait 100 ${x}" ; fi
 - install_python_requirements ;
 - R CMD javareconf ;
 after_success:
-    - Rscript -e 'covr::coveralls()'
-    - Rscript -e 'install.packages("remotes")' -e 'remotes::install_github("hadley/pkgdown")' -e 'pkgdown::build_site()'
-    
+- dump_logs
+after_failure:
+- dump_logs
+before_deploy:
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then PKG_TARBALL=$(ls -1t *.tgz | head -n 1);
+  PKG_TARBALL_WITH_R=`echo $PKG_TARBALL | sed 's/.tgz/_'"R${rver}"'.tgz/'` ; mv ${PKG_TARBALL}
+  ${PKG_TARBALL_WITH_R} ; echo "Built tarball is ${PKG_TARBALL_WITH_R}" ; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then PKG_TARBALL=$(ls -1t *.tar.gz | head -n
+  1); PKG_TARBALL_WITH_R=`echo $PKG_TARBALL | sed 's/.tar.gz/_'"R${rver}"'.tar.gz/'`
+  ; mv ${PKG_TARBALL} ${PKG_TARBALL_WITH_R} ; echo "Built tarball is ${PKG_TARBALL_WITH_R}"
+  ; fi
+- if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then rm -f *.tar.gz; fi
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  keep-history: true
-  local-dir: docs
+  provider: releases
+  skip_cleanup: true
+  file_glob: true
+  overwrite: true
+  file: "${PACKAGE_NAME}*.t*gz"
   on:
-    branch: master
+    tags: true
+  api-key:
+    secure: d/fTXrogB0ZTfxxbo/s/0RY3OjEcS5vhP8obntn2W0Adw5rVEvjdpt6XlZwLmuZMwDl+INg2uaqyvYvalDlhR8iQ6kwW5kO7oqc/I+h4woru6aY6LkiMYQchcsw+ZH9HXk8YjTOfGnvubkBP9sJHE/SKEI3V9jANSKXMb1SsKfWzI0W2x6D7abaNNezAugUhkyarhoBYXXDvqchAloog394QJsNJ3YwaxEsKaEn8NwYXSDwOenD1MCn8+5ETojf36SSFjnc5n37WqCPoCUUbZcg0Or/IFEhvnk9jxkQ+g/zKVeiY2ovmqMIBdBQWzfcBC3dF6PMYFZnVffOYGkBXGLFkY8tJ0wzow/TbJ6J0qfrtU1KB/mhwmtHe+UId6Uma6/6/Oz6+qrwNYJHwA4BgPZ27OcX44Xj0yx8dqp1Iyn4gBnbbMS1djLnKBX7T7KFjjA2PMuDJZ1viaR/s0Xl+awhCzi5ctpbzK3KfYpIyoQSqheKKXlBGHbtXN0SNMvuSSTB3dP7npR46NLMBJu+NK4vhLNYVmgzWaASjzbBbgYANmB0XXp/gZwGEdDFyfablf63DGK6cH21ZTr++mha91n/kfNiat6Ie+zTf0SgxPYuKXdLy0kI41u62WLMDGc1ko1rhG4cvedWMhkmDCKMOJR0vmirtXUSX8cToN9KfYnw=
+after_deploy:
+- echo "${PROJECT_NAME}" | grep -q "releases"; if [[ $? -eq 0 ]]; then run_coverage="false";
+  else run_coverage=; fi;
+- if [[ "${TRAVIS_OS_NAME}" == "linux" && ${TRAVIS_R_VERSION_STRING} = "release" &&
+  -z "${run_coverage}" ]]; then echo 'covr::coveralls(type = "all", quiet = FALSE)'
+  > neuroc_covr.R ; travis_wait 100 Rscript neuroc_covr.R ; rm neuroc_covr.R ; fi
