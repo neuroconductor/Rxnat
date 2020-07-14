@@ -17,5 +17,4 @@ ByteCompile: true
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr
 BugReports: https://github.com/adigherman/Rxnat/issues
-Repository: Neuroconductor
-biocViews: 
+Remotes:

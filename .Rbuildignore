@@ -7,3 +7,5 @@
 ^doc$
 ^Meta$
 paper_code.R
+^DESCRIPTION\.bak$
+^\./\.travis\.yml\.bak$
