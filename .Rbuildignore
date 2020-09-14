@@ -9,3 +9,5 @@
 paper_code.R
 use_case.R
 ^\.github$
+^DESCRIPTION\.bak$
+^\./\.travis\.yml\.bak$
