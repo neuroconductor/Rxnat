@@ -11,3 +11,4 @@ use_case.R
 ^\.github$
 ^DESCRIPTION\.bak$
 ^\./\.travis\.yml\.bak$
+^\./appveyor\.yml\.bak$
