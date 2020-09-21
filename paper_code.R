@@ -1,3 +1,44 @@
+# Install Rxnat dependencies for the examplein the paper
+# The paper example requires cmake, ITK and FSL, as a system dependencies
+# cmake installation guide can be found here: https://cmake.org/install/
+# To install FSL please follow this guide: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
+# The ITK installation guide can be found here: https://itk.org/download/
+#
+# The R dependencies can be installed easily using 
+# `install.packages()` function 
+# install.packages(c('dplyr','scales'))
+#
+# For the `fslr`, `extrantsr`, `malf.templates` and `WhiteStripe`
+# we recomment using the Neuroconductor platform to easily install them
+# source("https://neuroconductor.org/neurocLite.R")
+# neuro_install('fslr')
+# neuro_install('extrantsr')
+# neuro_install('malf.templates')
+# neuro_install('WhiteStripe')
+#
+# Instead of installing all the system dependencies and package dependencies 
+# from above, one can easily download the neurodocker image from this
+# page: https://neuroconductor.org/docker-release
+#
+# Authentication against the XNAT server can be done in two
+# different ways by setting up environment variables in R, or 
+# by providing the user credentials in the `xnat_connect()`
+# function. The recommended and more secure method is by
+# setting up the environment variables in the .Renvion file.
+# The .Renviron file is located in the user folder (eg. ~/.Renviron)
+# and the variable names for the XNAT connection need to be in the 
+# form NITRC_RXNAT_USER and NITRC_RXNAT_PASS (for NITRC connection).
+# As an example, we can set NITRC_RXNAT_USER="testuser" and 
+# NITRC_RXNAT_PASS="testpassword" in the .Renviron file, start 
+# (re-start) R and initiate the NITRC connection with 
+# nitrc <- xnat_connect("https://nitrc.org/ir", xnat_name="NITRC")
+# For any other XNAT server, please replace the first part of the
+# environment variable with the XNAT server name (for example
+# HCP will have HCP_RXNAT_USER and HCP_RXNAT_PASS). Please make
+# sure that the `xnat_name` parameter in the `xnat_connect` call
+# is using the same name as the first part of the environment variables
+# (eg. NITRC, HCP).
+
 library(dplyr)
 library(fslr)
 library(extrantsr)
