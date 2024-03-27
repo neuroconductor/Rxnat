@@ -562,7 +562,8 @@ xnat_connect <- function(base_url, username=NULL, password=NULL, xnat_name=NULL,
                            zipped = TRUE,
                            verbose = FALSE,
                            error = FALSE, 
-                           extract = FALSE){
+                           extract = FALSE,
+                           timeout_duration = 200){
     if(is.null(file_dir)) {
       file_dir <- tempdir()
     }
@@ -583,7 +584,7 @@ xnat_connect <- function(base_url, username=NULL, password=NULL, xnat_name=NULL,
         write_disk(path = destfile,
                    overwrite = TRUE),
         set_cookies(JSESSIONID = jsid),
-        timeout(200)
+        timeout(timeout_duration)
       )
       if (verbose) {
         args = c(args, list(progress()))
